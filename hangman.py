@@ -15,23 +15,28 @@ class Hangman:
     def playGame(self):
         "Begin the main game loop for a single game. Can be called again to start another game"
         #self.wordToGuess =  #Pick a random word
-        self.setState()
-        while True:
-            self.sendStateToPlayer()
-            userGuess = self.receiveInputFromPlayer()
-            self.updateStateAccordingToGuess(userGuess)
-            if self.unguessedLettersRemaining == 0:
-                print(f"Congratulations! The correct word\
-                      was indeed {self.wordToGuess}.\
-                        Want to play again?")
-                break
-            elif self.lives == 0:
-                print(f"Sorry, you have used up all 10 of your lives. \
-                      The correct word was {self.wordToGuess}.\
-                        Want to play again?")
-                break
-            #print(wordToGuess)
-            #break #TODO: Remove later when done
+        playAgain = True
+        while playAgain:
+            self.setState()
+
+            #Play 1 game
+            while True:
+                self.sendStateToPlayer()
+                userGuess = self.receiveInputFromPlayer()
+                self.updateStateAccordingToGuess(userGuess)
+                if self.unguessedLettersRemaining == 0:
+                    print(f"Congratulations! The correct word "
+                        f"was indeed {self.wordToGuess}. "
+                            f"Press y to play again, n to quit.", end = " ")
+                    break
+                elif self.lives == 0:
+                    print("Sorry, you have used up all 10 of your lives. " 
+                        f"The correct word was {self.wordToGuess}. "
+                            "Press y to play again, n to quit.", end = " ")
+                    break
+
+            #Update playAgain after 1 game
+            playAgain = self.receivePlayAgainSignal()
 
     def sendStateToPlayer(self):
         "Displays the state on the player's end along with a reminder of how many lives are left"
@@ -50,6 +55,14 @@ class Hangman:
             else:
                 break
         return guess
+    
+    def receivePlayAgainSignal(self):
+        """Returns true if user enters yes, false otherwise"""
+        signal = input("")
+        if re.fullmatch("yes|Yes|y|Y", signal):
+            return True
+        else:
+            return False
     
     def updateStateAccordingToGuess(self, userGuess):
         "Replaces the blank spaces if the user's guess is correct"
@@ -70,6 +83,7 @@ class Hangman:
         self.unguessedLettersRemaining = len(self.wordToGuess)
         self.lives = 10
         self.state = []
+        self.alreadyAsked = []
         for i in range(len(self.wordToGuess)):
             self.state.append("- ")
 
