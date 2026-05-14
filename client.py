@@ -26,8 +26,8 @@ if __name__ == "__main__":
     "Print data received from server, get user input,"
     "send to server loop"
     while True:
-        data = socket.recv(1024)
+        data = conn.recv(1024)
         print(data.decode())
         messageToSend = getSingleLetterFromPlayer() 
-        socket.sendall(messageToSend.encode()) 
+        conn.sendall(messageToSend.encode()) 
         
