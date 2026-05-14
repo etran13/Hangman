@@ -45,6 +45,7 @@ class Hangman:
     """HELPER FUNCTIONS to handle all send and recv from socket"""
 
     def sendStringToClient(self, messageToSend):
+        print(f"Sent: {messageToSend}")
         self.socketConnection.sendall(messageToSend.encode())
 
     def recvFromClient(self):
