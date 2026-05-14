@@ -8,13 +8,14 @@ from hangman import *
 class GameThread(Thread):
     def __init__(self, socketConnection):
         super().__init__()
+        self.conn = socketConnection
         self.game = Hangman(socketConnection)
 
     def run(self):
          """Runs the hangman game"""
          self.game.playGame()
+         self.conn.close()
          print("playgame EXITED")
-
 
 if __name__ == "__main__":
     #Set host IP and port number to listen on
