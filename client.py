@@ -23,10 +23,11 @@ if __name__ == "__main__":
     conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     conn.connect((hostIP, portNum)) 
 
-    "Get input, send, print response loop"
+    "Print data received from server, get user input,"
+    "send to server loop"
     while True:
-        messageToSend = getSingleLetterFromPlayer() 
-        socket.sendall(messageToSend.encode()) 
         data = socket.recv(1024)
         print(data.decode())
+        messageToSend = getSingleLetterFromPlayer() 
+        socket.sendall(messageToSend.encode()) 
         
