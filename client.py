@@ -11,6 +11,7 @@ def shutdown():
     os._exit(0)
 
 def getSingleLetterFromPlayer():
+    "Prompt the user for input"
     while True:
         letter = input("")
         return letter
@@ -36,5 +37,6 @@ if __name__ == "__main__":
         messageToSend = getSingleLetterFromPlayer() 
         conn.sendall(messageToSend.encode()) 
 
+    #End of program
     conn.close()
         

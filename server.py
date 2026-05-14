@@ -18,9 +18,19 @@ class GameThread(Thread):
          print("playgame EXITED")
 
 if __name__ == "__main__":
+    #Set the filename/path
+    try:
+        filename = sys.argv[0]
+    except:
+        raise Exception("Invalid or missing file name")
+
     #Set host IP and port number to listen on
     hostIP = '10.56.2.249' #The host IP of server VM
-    portNum = 8080
+
+    try:
+        portNum = int(sys.argv[1])
+    except:
+         raise Exception("Invalid or missing port number")
 
     #Create a socket to listen
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as initialServer:
