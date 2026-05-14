@@ -24,7 +24,7 @@ class Hangman:
             #Play 1 game
             while True:
                 self.sendStateToPlayer()
-                userGuess = self.recvFromClient()
+                userGuess = self.receiveGuess()
                 self.updateStateAccordingToGuess(userGuess)
                 if self.unguessedLettersRemaining == 0:
                     self.sendStringToClient(f"Congratulations! The correct word "
@@ -61,6 +61,17 @@ class Hangman:
         #         continue
         #     else:
         #         break
+
+    def receiveGuess(self):
+        while True:
+            letter = self.recvFromClient()
+            if letter in self.alreadyAsked:
+                self.sendStringToClient("You have already guessed this letter.")
+                continue
+            else:
+                break
+        return letter
+
     
     def receivePlayAgainSignal(self):
         """Returns true if user enters yes, false otherwise"""
