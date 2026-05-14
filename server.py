@@ -7,6 +7,7 @@ from hangman import *
 
 class GameThread(Thread):
     def __init__(self, socketConnection):
+        super().__init__()
         self.game = Hangman(socketConnection)
 
     def run(self):
