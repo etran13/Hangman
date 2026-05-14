@@ -13,6 +13,7 @@ class GameThread(Thread):
     def run(self):
          """Runs the hangman game"""
          self.game.playGame()
+         print("playgame EXITED")
 
 
 if __name__ == "__main__":
