@@ -23,7 +23,7 @@ class Hangman:
 
             #Play 1 game
             while True:
-                self.sendStateToPlayer().s
+                self.sendStateToPlayer()
                 userGuess = self.receiveGuess()
                 self.updateStateAccordingToGuess(userGuess)
                 if self.unguessedLettersRemaining == 0:
