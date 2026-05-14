@@ -23,10 +23,10 @@ class Hangman:
 
             #Play 1 game
             while True:
-                self.sendStateToPlayer().s
+                self.sendStateToPlayer()
                 userGuess = self.receiveGuess()
                 
-                if not userGuess: 
+                if not userGuess:
                     print("Player has disconnected")
                     break
 
