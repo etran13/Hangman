@@ -23,8 +23,13 @@ class Hangman:
 
             #Play 1 game
             while True:
-                self.sendStateToPlayer()
+                self.sendStateToPlayer().s
                 userGuess = self.receiveGuess()
+                
+                if not userGuess: 
+                    print("Player has disconnected")
+                    break
+
                 self.updateStateAccordingToGuess(userGuess)
                 if self.unguessedLettersRemaining == 0:
                     self.sendStringToClient(f"Congratulations! The correct word "
