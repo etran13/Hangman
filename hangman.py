@@ -23,13 +23,8 @@ class Hangman:
 
             #Play 1 game
             while True:
-                self.sendStateToPlayer()
+                self.sendStateToPlayer().s
                 userGuess = self.receiveGuess()
-                
-                if not userGuess:
-                    print("Player has disconnected")
-                    break
-
                 self.updateStateAccordingToGuess(userGuess)
                 if self.unguessedLettersRemaining == 0:
                     self.sendStringToClient(f"Congratulations! The correct word "
@@ -50,8 +45,12 @@ class Hangman:
     """HELPER FUNCTIONS to handle all send and recv from socket"""
 
     def sendStringToClient(self, messageToSend):
-        print(f"Sent: {messageToSend}")
-        self.socketConnection.sendall(messageToSend.encode())
+        try:
+            self.socketConnection.sendall(messageToSend.encode())
+            print(f"Sent: {messageToSend}")
+            return 0
+        except BrokenPipeError:
+            return 1
 
     def recvFromClient(self):
         data = self.socketConnection.recv(1024)
