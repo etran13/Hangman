@@ -2,14 +2,16 @@ import random
 import re
 
 class Hangman:
-    def __init__(self):
+    def __init__(self, socketConnection):
+        self.socketConnection = socketConnection #Responsible for sending across socket
+
         self.wordList = loadWordsFromFile("words.txt") #A list of words to pick from
         self.state = "" #A list that tracks the player's correct/incorrect guesses, ex. "f__t"
         
         self.lives = 10 #An int that represents the number of remaining attempts
         self.unguessedLettersRemaining = 0 #An int that represents the number of unguessed letters
 
-        self.wordToGuess = "hello"
+        self.wordToGuess = ""
         self.alreadyAsked = []
 
     def playGame(self):
@@ -22,15 +24,15 @@ class Hangman:
             #Play 1 game
             while True:
                 self.sendStateToPlayer()
-                userGuess = self.receiveInputFromPlayer()
+                userGuess = self.recvFromClient()
                 self.updateStateAccordingToGuess(userGuess)
                 if self.unguessedLettersRemaining == 0:
-                    print(f"Congratulations! The correct word "
+                    self.sendStringToClient(f"Congratulations! The correct word "
                         f"was indeed {self.wordToGuess}. "
                             f"Press y to play again, n to quit.", end = " ")
                     break
                 elif self.lives == 0:
-                    print("Sorry, you have used up all 10 of your lives. " 
+                    self.sendStringToClient("Sorry, you have used up all 10 of your lives. " 
                         f"The correct word was {self.wordToGuess}. "
                             "Press y to play again, n to quit.", end = " ")
                     break
@@ -38,27 +40,31 @@ class Hangman:
             #Update playAgain after 1 game
             playAgain = self.receivePlayAgainSignal()
 
+    def sendStringToClient(self, messageToSend):
+        self.socketConnection.sendall(messageToSend.encode())
+
     def sendStateToPlayer(self):
         "Displays the state on the player's end along with a reminder of how many lives are left"
-        print(''.join(self.state))
-        print(f"You have {self.lives} lives left.")
+        self.sendStringToClient(''.join(self.state) + "\n" + f"You have {self.lives} lives left.")
+        
 
-    def receiveInputFromPlayer(self):
-        while True:
-            guess = input("Input your guess: ")
-            if re.fullmatch("[a-zA-Z]", guess) == None: #Use regex to verify that guess is a single letter
-                print("Guess must be a single letter.")
-                continue
-            elif guess in self.alreadyAsked:
-                print("You have already guessed this letter.")
-                continue
-            else:
-                break
-        return guess
+    def recvFromClient(self):
+        data = self.socketConnection.recv(1024)
+        return data.decode()
+        # while True:
+            #TODO: Move to client side
+        #     if re.fullmatch("[a-zA-Z]", guess) == None: #Use regex to verify that guess is a single letter
+        #         print("Guess must be a single letter.")
+        #         continue
+        #     elif guess in self.alreadyAsked:
+        #         print("You have already guessed this letter.")
+        #         continue
+        #     else:
+        #         break
     
     def receivePlayAgainSignal(self):
         """Returns true if user enters yes, false otherwise"""
-        signal = input("")
+        signal = self.recvFromClient()
         if re.fullmatch("yes|Yes|y|Y", signal):
             return True
         else:
@@ -79,7 +85,7 @@ class Hangman:
         """Sets initial values at the beginning of every game
         Randomly selects a word from the list of words and
         sets other values based on that"""
-        #self.wordToGuess = random.choice(self.wordList).rstrip()
+        self.wordToGuess = random.choice(self.wordList).rstrip()
         self.unguessedLettersRemaining = len(self.wordToGuess)
         self.lives = 10
         self.state = []
@@ -92,11 +98,9 @@ def loadWordsFromFile(filename):
     try:
         with open(filename, 'r', encoding='utf-8') as file:
             lines = file.readlines()
+            file.close()
             return lines
     except FileNotFoundError:
         print(f"Error: The file '{filename}' was not found.")
     except Exception as e:
         print(f"An error occurred: {e}")
-
-h = Hangman()
-h.playGame()
