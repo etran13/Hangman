@@ -12,7 +12,7 @@ def shutdown():
 
 def getSingleLetterFromPlayer():
     while True:
-        letter = input("Input your guess: ")
+        letter = input("")
         return letter
 
 if __name__ == "__main__":
