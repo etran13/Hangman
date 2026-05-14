@@ -20,7 +20,7 @@ class GameThread(Thread):
 if __name__ == "__main__":
     #Set the filename/path
     try:
-        filename = sys.argv[0]
+        filename = sys.argv[1]
     except:
         raise Exception("Invalid or missing file name")
 
@@ -28,7 +28,7 @@ if __name__ == "__main__":
     hostIP = '10.56.2.249' #The host IP of server VM
 
     try:
-        portNum = int(sys.argv[1])
+        portNum = int(sys.argv[2])
     except:
          raise Exception("Invalid or missing port number")
 
