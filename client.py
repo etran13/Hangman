@@ -27,7 +27,14 @@ if __name__ == "__main__":
     "send to server loop"
     while True:
         data = conn.recv(1024)
+
+        #Check if the server sends an empty packet- shut down if so
+        if not data:
+            break
+
         print(data.decode(), end="")
         messageToSend = getSingleLetterFromPlayer() 
         conn.sendall(messageToSend.encode()) 
+
+    conn.close()
         
