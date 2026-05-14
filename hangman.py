@@ -50,6 +50,7 @@ class Hangman:
             print(f"Sent: {messageToSend}")
             return 0
         except BrokenPipeError:
+            print("Client disconnected")
             return 1
 
     def recvFromClient(self):
