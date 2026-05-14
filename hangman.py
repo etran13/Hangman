@@ -29,12 +29,12 @@ class Hangman:
                 if self.unguessedLettersRemaining == 0:
                     self.sendStringToClient(f"Congratulations! The correct word "
                         f"was indeed {self.wordToGuess}. "
-                            f"Press y to play again, n to quit.", end = " ")
+                            f"Press y to play again, n to quit.")
                     break
                 elif self.lives == 0:
                     self.sendStringToClient("Sorry, you have used up all 10 of your lives. " 
                         f"The correct word was {self.wordToGuess}. "
-                            "Press y to play again, n to quit.", end = " ")
+                            "Press y to play again, n to quit.")
                     break
 
             #Update playAgain after 1 game
