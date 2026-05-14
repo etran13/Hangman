@@ -34,7 +34,12 @@ if __name__ == "__main__":
             break
 
         print(data.decode(), end="")
-        messageToSend = getSingleLetterFromPlayer() 
+
+        try:
+            messageToSend = getSingleLetterFromPlayer() 
+        except:
+            break
+        
         conn.sendall(messageToSend.encode()) 
 
     #End of program
