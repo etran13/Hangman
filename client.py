@@ -27,7 +27,7 @@ if __name__ == "__main__":
     "send to server loop"
     while True:
         data = conn.recv(1024)
-        print(data.decode())
+        print(data.decode(), end="")
         messageToSend = getSingleLetterFromPlayer() 
         conn.sendall(messageToSend.encode()) 
         

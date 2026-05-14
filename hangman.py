@@ -29,12 +29,12 @@ class Hangman:
                 if self.unguessedLettersRemaining == 0:
                     self.sendStringToClient(f"Congratulations! The correct word "
                         f"was indeed {self.wordToGuess}. "
-                            f"Press y to play again, n to quit.")
+                            f"Enter y to play again, n to quit: ")
                     break
                 elif self.lives == 0:
                     self.sendStringToClient("Sorry, you have used up all 10 of your lives. " 
                         f"The correct word was {self.wordToGuess}. "
-                            "Press y to play again, n to quit.")
+                            "Enter y to play again, n to quit: ")
                     break
 
             #Update playAgain after 1 game
@@ -58,7 +58,7 @@ class Hangman:
     
     def sendStateToPlayer(self):
         "Displays the state on the player's end along with a reminder of how many lives are left"
-        self.sendStringToClient(''.join(self.state) + "\n" + f"You have {self.lives} lives left.")
+        self.sendStringToClient(''.join(self.state) + "\n" + f"You have {self.lives} lives left. \nInput your guess: ")
 
     def receiveGuess(self):
         while True:
