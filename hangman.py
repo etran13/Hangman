@@ -64,10 +64,10 @@ class Hangman:
         while True:
             letter = self.recvFromClient()
             if re.fullmatch("[a-zA-Z]", letter) == None: #Use regex to verify that guess is a single letter
-                self.sendStringToClient("Guess must be a single letter.")
+                self.sendStringToClient("Guess must be a single letter.\nInput your guess: ")
                 continue
             elif letter in self.alreadyAsked:
-                self.sendStringToClient("You have already guessed this letter.")
+                self.sendStringToClient("You have already guessed this letter.\nInput your guess: ")
                 continue
             else:
                 break
