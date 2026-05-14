@@ -40,32 +40,32 @@ class Hangman:
             #Update playAgain after 1 game
             playAgain = self.receivePlayAgainSignal()
 
+
+
+    """HELPER FUNCTIONS to handle all send and recv from socket"""
+
     def sendStringToClient(self, messageToSend):
         self.socketConnection.sendall(messageToSend.encode())
-
-    def sendStateToPlayer(self):
-        "Displays the state on the player's end along with a reminder of how many lives are left"
-        self.sendStringToClient(''.join(self.state) + "\n" + f"You have {self.lives} lives left.")
-        
 
     def recvFromClient(self):
         data = self.socketConnection.recv(1024)
         return data.decode()
-        # while True:
-            #TODO: Move to client side
-        #     if re.fullmatch("[a-zA-Z]", guess) == None: #Use regex to verify that guess is a single letter
-        #         print("Guess must be a single letter.")
-        #         continue
-        #     elif guess in self.alreadyAsked:
-        #         print("You have already guessed this letter.")
-        #         continue
-        #     else:
-        #         break
+    
+    
+
+    """Helpers to deal with player input that comes in"""
+    
+    def sendStateToPlayer(self):
+        "Displays the state on the player's end along with a reminder of how many lives are left"
+        self.sendStringToClient(''.join(self.state) + "\n" + f"You have {self.lives} lives left.")
 
     def receiveGuess(self):
         while True:
             letter = self.recvFromClient()
-            if letter in self.alreadyAsked:
+            if re.fullmatch("[a-zA-Z]", letter) == None: #Use regex to verify that guess is a single letter
+                self.sendStringToClient("Guess must be a single letter.")
+                continue
+            elif letter in self.alreadyAsked:
                 self.sendStringToClient("You have already guessed this letter.")
                 continue
             else:

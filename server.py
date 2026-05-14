@@ -24,6 +24,7 @@ if __name__ == "__main__":
             initialServer.bind((hostIP, portNum))
             initialServer.listen() 
             print(f"Server listening on address {hostIP}, port {portNum}")
+            conn, addr = initialServer.accept()
 
     '''Main loop- Repeatedly accept connections and 
     create GameThreads for game instances'''

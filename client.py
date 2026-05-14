@@ -12,14 +12,8 @@ def shutdown():
 
 def getSingleLetterFromPlayer():
     while True:
-        if re.fullmatch("[a-zA-Z]", letter) == None: #Use regex to verify that guess is a single letter
-            print("Guess must be a single letter.")
-            continue
-        elif letter in self.alreadyAsked:
-            print("You have already guessed this letter.")
-            continue
-        else:
-            break
+        letter = input("Input your guess: ")
+        return letter
 
 if __name__ == "__main__":
     """Make the connection to the server
@@ -29,7 +23,10 @@ if __name__ == "__main__":
     conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     conn.connect((hostIP, portNum)) 
 
+    "Get input, send, print response loop"
     while True:
-        #print("Sending loop entered")
         messageToSend = getSingleLetterFromPlayer() 
-        socket.sendall(messageToSend.encode()) #Send the message using the socket connection that was passed in
+        socket.sendall(messageToSend.encode()) 
+        data = socket.recv(1024)
+        print(data.decode())
+        
