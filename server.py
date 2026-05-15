@@ -5,11 +5,25 @@ import os
 
 from hangman import *
 
+"""FILE HANDLING- Generate list from file passed in"""
+
+def loadWordsFromFile(filename):
+    "Reads the configuration file and returns a list of all its contents"
+    try:
+        with open(filename, 'r', encoding='utf-8') as file:
+            lines = file.readlines()
+            file.close()
+            return lines
+    except FileNotFoundError:
+        print(f"Error: The file '{filename}' was not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
 class GameThread(Thread):
-    def __init__(self, socketConnection):
+    def __init__(self, socketConnection, listOfWords):
         super().__init__()
         self.conn = socketConnection
-        self.game = Hangman(socketConnection)
+        self.game = Hangman(socketConnection, listOfWords)
 
     def run(self):
         """Runs the hangman game, catches premature disconnects"""
@@ -37,6 +51,9 @@ if __name__ == "__main__":
          print("Invalid or missing port number")
          os._exit(0)
 
+    #Create the list
+    listOfWords = loadWordsFromFile(filename)
+
     #Create a socket to listen
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as initialServer:
             initialServer.bind((hostIP, portNum))
@@ -49,5 +66,5 @@ if __name__ == "__main__":
                 conn, addr = initialServer.accept() #Blocks until accept
 
                 #Create and start a game for the client
-                newGame = GameThread(conn)
+                newGame = GameThread(conn, listOfWords)
                 newGame.start() 

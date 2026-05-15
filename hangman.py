@@ -3,10 +3,10 @@ import re
 import sys
 
 class Hangman:
-    def __init__(self, socketConnection):
+    def __init__(self, socketConnection, listOfWords):
         self.socketConnection = socketConnection #Responsible for sending across socket
 
-        self.wordList = loadWordsFromFile("words.txt") #A list of words to pick from
+        self.wordList = listOfWords #A list of words to pick from
         self.state = "" #A list that tracks the player's correct/incorrect guesses, ex. "f__t"
         
         self.lives = 10 #An int that represents the number of remaining attempts
@@ -25,12 +25,15 @@ class Hangman:
             #Play 1 game
             while True:
                 self.sendStateToPlayer()
+
+                #Get the guess and check if it's empty; break if so.
                 userGuess = self.receiveGuess()
                 if len(userGuess) == 0:
                     break
+
                 self.updateStateAccordingToGuess(userGuess)
 
-                #Check if user has reached game-ending conditions
+                #Check if user has reached game-ending conditions; break if so.
                 if self.unguessedLettersRemaining == 0:
                     self.sendStringToClient(f"Congratulations! The correct word "
                         f"was indeed {self.wordToGuess}. "
@@ -114,14 +117,4 @@ class Hangman:
         for i in range(len(self.wordToGuess)):
             self.state.append("- ")
 
-def loadWordsFromFile(filename):
-    "Reads the configuration file and returns a list of all its contents"
-    try:
-        with open(filename, 'r', encoding='utf-8') as file:
-            lines = file.readlines()
-            file.close()
-            return lines
-    except FileNotFoundError:
-        print(f"Error: The file '{filename}' was not found.")
-    except Exception as e:
-        print(f"An error occurred: {e}")
+
