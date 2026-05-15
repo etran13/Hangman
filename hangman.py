@@ -26,6 +26,8 @@ class Hangman:
             while True:
                 self.sendStateToPlayer()
                 userGuess = self.receiveGuess()
+                if len(userGuess) == 0:
+                    break
                 self.updateStateAccordingToGuess(userGuess)
 
                 #Check if user has reached game-ending conditions
@@ -53,9 +55,9 @@ class Hangman:
         print(f"Sent: {messageToSend}")
 
     def recvFromClient(self):
-        data = self.socketConnection.recv(1024)
+        data = self.socketConnection.recv(1024).decode()
         print(f"RECV'D: {data.decode()}")
-        return data.decode()
+        return data
     
     
 
