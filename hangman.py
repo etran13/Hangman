@@ -1,5 +1,6 @@
 import random
 import re
+import sys
 
 class Hangman:
     def __init__(self, socketConnection):
@@ -18,7 +19,6 @@ class Hangman:
         "Begin the main game loop for a single game. Can be called again to start another game"
         #self.wordToGuess =  #Pick a random word
         playAgain = True
-        userDisconnectedPrematurely = False
         while playAgain:
             self.setState()
 
@@ -26,9 +26,6 @@ class Hangman:
             while True:
                 self.sendStateToPlayer()
                 userGuess = self.receiveGuess()
-                if not userGuess:
-                    userDisconnectedPrematurely = True
-                    break
                 self.updateStateAccordingToGuess(userGuess)
                 if self.unguessedLettersRemaining == 0:
                     self.sendStringToClient(f"Congratulations! The correct word "
@@ -42,17 +39,21 @@ class Hangman:
                     break
 
             #Update playAgain after 1 game
-            if not userDisconnectedPrematurely:
-                playAgain = self.receivePlayAgainSignal()
+            playAgain = self.receivePlayAgainSignal()
 
 
 
     """HELPER FUNCTIONS to handle all send and recv from socket"""
 
     def sendStringToClient(self, messageToSend):
-        self.socketConnection.sendall(messageToSend.encode())
-        print(f"Sent: {messageToSend}")
-        return 0
+        "Attempts to send"
+        try:
+            self.socketConnection.sendall(messageToSend.encode())
+            print(f"Sent: {messageToSend}")
+        except BrokenPipeError:
+            print("Client has disconnected")
+            self.socketConnection.close()
+            sys.exit()
 
     def recvFromClient(self):
         data = self.socketConnection.recv(1024)
@@ -75,12 +76,7 @@ class Hangman:
                 errorMessage = "You have already guessed this letter.\nInput your guess: "
             else:
                 break
-
-            try:
-                self.sendStringToClient(errorMessage)
-            except BrokenPipeError:
-                print("Client disconnected")
-                return None
+            self.sendStringToClient(errorMessage)
 
         return letter
 
