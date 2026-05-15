@@ -12,10 +12,13 @@ class GameThread(Thread):
         self.game = Hangman(socketConnection)
 
     def run(self):
-         """Runs the hangman game"""
-         self.game.playGame()
-         self.conn.close()
-         print("playgame EXITED")
+        """Runs the hangman game, catches premature disconnects"""
+        try:
+            self.game.playGame()
+        except BrokenPipeError:
+            print("Player has disconnected")
+        self.conn.close()
+        sys.exit()
 
 if __name__ == "__main__":
     #Set the filename/path

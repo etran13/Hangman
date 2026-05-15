@@ -27,6 +27,8 @@ class Hangman:
                 self.sendStateToPlayer()
                 userGuess = self.receiveGuess()
                 self.updateStateAccordingToGuess(userGuess)
+
+                #Check if user has reached game-ending conditions
                 if self.unguessedLettersRemaining == 0:
                     self.sendStringToClient(f"Congratulations! The correct word "
                         f"was indeed {self.wordToGuess}. "
@@ -47,13 +49,8 @@ class Hangman:
 
     def sendStringToClient(self, messageToSend):
         "Attempts to send"
-        try:
-            self.socketConnection.sendall(messageToSend.encode())
-            print(f"Sent: {messageToSend}")
-        except BrokenPipeError:
-            print("Client has disconnected")
-            self.socketConnection.close()
-            sys.exit()
+        self.socketConnection.sendall(messageToSend.encode())
+        print(f"Sent: {messageToSend}")
 
     def recvFromClient(self):
         data = self.socketConnection.recv(1024)
