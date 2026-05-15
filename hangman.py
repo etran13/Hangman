@@ -18,6 +18,7 @@ class Hangman:
         "Begin the main game loop for a single game. Can be called again to start another game"
         #self.wordToGuess =  #Pick a random word
         playAgain = True
+        userDisconnectedPrematurely = False
         while playAgain:
             self.setState()
 
@@ -25,6 +26,9 @@ class Hangman:
             while True:
                 self.sendStateToPlayer()
                 userGuess = self.receiveGuess()
+                if not userGuess:
+                    userDisconnectedPrematurely = True
+                    break
                 self.updateStateAccordingToGuess(userGuess)
                 if self.unguessedLettersRemaining == 0:
                     self.sendStringToClient(f"Congratulations! The correct word "
@@ -38,20 +42,17 @@ class Hangman:
                     break
 
             #Update playAgain after 1 game
-            playAgain = self.receivePlayAgainSignal()
+            if not userDisconnectedPrematurely:
+                playAgain = self.receivePlayAgainSignal()
 
 
 
     """HELPER FUNCTIONS to handle all send and recv from socket"""
 
     def sendStringToClient(self, messageToSend):
-        try:
-            self.socketConnection.sendall(messageToSend.encode())
-            print(f"Sent: {messageToSend}")
-            return 0
-        except BrokenPipeError:
-            print("Client disconnected")
-            return 1
+        self.socketConnection.sendall(messageToSend.encode())
+        print(f"Sent: {messageToSend}")
+        return 0
 
     def recvFromClient(self):
         data = self.socketConnection.recv(1024)
@@ -69,13 +70,18 @@ class Hangman:
         while True:
             letter = self.recvFromClient()
             if re.fullmatch("[a-zA-Z]", letter) == None: #Use regex to verify that guess is a single letter
-                self.sendStringToClient("Guess must be a single letter.\nInput your guess: ")
-                continue
+                errorMessage = "Guess must be a single letter.\nInput your guess: "
             elif letter in self.alreadyAsked:
-                self.sendStringToClient("You have already guessed this letter.\nInput your guess: ")
-                continue
+                errorMessage = "You have already guessed this letter.\nInput your guess: "
             else:
                 break
+
+            try:
+                self.sendStringToClient(errorMessage)
+            except BrokenPipeError:
+                print("Client disconnected")
+                return None
+
         return letter
 
     
