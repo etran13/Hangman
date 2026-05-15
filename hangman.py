@@ -29,6 +29,7 @@ class Hangman:
                 #Get the guess and check if it's empty; break if so.
                 userGuess = self.receiveGuess()
                 if len(userGuess) == 0:
+                    print("Player has disconnected!")
                     break
 
                 self.updateStateAccordingToGuess(userGuess)
@@ -55,7 +56,7 @@ class Hangman:
     def sendStringToClient(self, messageToSend):
         "Attempts to send"
         self.socketConnection.sendall(messageToSend.encode())
-        print(f"Sent: {messageToSend}")
+        #print(f"Sent: {messageToSend}")
 
     def recvFromClient(self):
         data = self.socketConnection.recv(1024).decode()
