@@ -56,7 +56,7 @@ class Hangman:
 
     def recvFromClient(self):
         data = self.socketConnection.recv(1024).decode()
-        print(f"RECV'D: {data.decode()}")
+        #print(f"RECV'D: {data.decode()}")
         return data
     
     
