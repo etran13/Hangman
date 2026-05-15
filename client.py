@@ -19,8 +19,17 @@ def getSingleLetterFromPlayer():
 if __name__ == "__main__":
     """Make the connection to the server
     using the argument passed in"""
-    hostIP = '10.56.2.249' #The host IP of server VM, hardcoded for now
-    portNum = int(sys.argv[1]) 
+    #hostIP = '10.56.2.249' #The host IP of server VM, hardcoded for now
+    try:
+        hostIP = sys.argv[1]
+    except:
+        raise Exception("Invalid or missing IP address")
+    
+    try:
+        portNum = int(sys.argv[2]) 
+    except:
+        raise Exception("Invalid or missing port number")
+    
     conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     conn.connect((hostIP, portNum)) 
 
