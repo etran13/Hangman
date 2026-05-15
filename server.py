@@ -22,7 +22,8 @@ if __name__ == "__main__":
     try:
         filename = sys.argv[1]
     except:
-        raise Exception("Invalid or missing file name")
+        print("Invalid or missing file name")
+        os._exit(0)
 
     #Set host IP and port number to listen on
     hostIP = '10.56.2.249' #The host IP of server VM
@@ -30,7 +31,8 @@ if __name__ == "__main__":
     try:
         portNum = int(sys.argv[2])
     except:
-         raise Exception("Invalid or missing port number")
+         print("Invalid or missing port number")
+         os._exit(0)
 
     #Create a socket to listen
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as initialServer:

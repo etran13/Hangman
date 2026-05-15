@@ -23,14 +23,17 @@ if __name__ == "__main__":
     try:
         hostIP = sys.argv[1]
     except IndexError:
-        raise Exception("Missing IP address")
+        print("Missing IP address")
+        os._exit(1)
     
     try:
         portNum = int(sys.argv[2]) 
     except IndexError:
-        raise Exception("Missing port number")
+        print("Missing port number")
+        os._exit(1)
     except ValueError:
-        raise Exception("Invalid port number")
+        print("Invalid port number")
+        os._exit(1)
     
     conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     conn.connect((hostIP, portNum)) 
