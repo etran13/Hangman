@@ -68,6 +68,8 @@ class Hangman:
     def receiveGuess(self):
         while True:
             letter = self.recvFromClient()
+            if len(letter) == 0:
+                break
             if re.fullmatch("[a-zA-Z]", letter) == None: #Use regex to verify that guess is a single letter
                 errorMessage = "Guess must be a single letter.\nInput your guess: "
             elif letter in self.alreadyAsked:
